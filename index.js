@@ -24,7 +24,7 @@ function calculer(salaire, tjm) {
 
 // 🏁 Commande /start
 bot.start((ctx) => {
-    ctx.reply("<b>Bienvenue sur ton assistant FORTIL !</b><i>Envoie simplement deux nombres pour le salaire et le tjm (ex: 33500 450) \n\n💡 J'intègre automatiquement les 20,20 €</i>", { parse_mode: "HTML" });
+    ctx.reply("<b>Bienvenue sur ton assistant FORTIL !</b><i>Envoie simplement deux nombres pour le salaire et le tjm (ex: 33500 450) \n\n💡 J'intègre automatiquement les 20,20€</i>", { parse_mode: "HTML" });
 });
 
 // 📌 Détection automatique des messages contenant **deux nombres**
