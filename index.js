@@ -24,7 +24,7 @@ function calculer(salaire, tjm) {
 
 // 🏁 Commande /start
 bot.start((ctx) => {
-    ctx.reply("<b>Bienvenue sur ton assistant FORTIL !</b>\n\n💡 <i>Envoie simplement deux nombres (ex: 33500 450), et je te donnerai les résultats.</i>", { parse_mode: "HTML" });
+    ctx.reply("<b>Bienvenue sur ton assistant FORTIL !</b>\n\n💡 <i>Envoie simplement deux nombres pour le salaire et le tjm (ex: 33500 450)</i>", { parse_mode: "HTML" });
 });
 
 // 📌 Détection automatique des messages contenant **deux nombres**
@@ -39,9 +39,9 @@ bot.hears(/^(\d+(\.\d+)?) (\d+(\.\d+)?)$/, (ctx) => {
     const resultats = calculer(salaire, tjm);
 
     const message = `
-📆 <b>Coût jour :</b> <u>${resultats.coutJour} €</u>
-💰 <b>Marge K2 jour :</b> <code>${resultats.margeJour} €</code>
-📊 <b>Marge K2 mois :</b> <u>${resultats.margeMois} €</u>
+📌 <b>Coût jour :</b> <b>${resultats.coutJour} €</b>
+💰 <b>Marge K2 jour :</b> <b>${resultats.margeJour} €</b>
+📊 <b>Marge K2 mois :</b> <b>${resultats.margeMois} €</b>
 📈 <b>Marge (%) :</b> <b>${resultats.margePourcentage} %</b>
 `;
 
