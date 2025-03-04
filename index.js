@@ -30,4 +30,36 @@ bot.hears(/^\/K2 (\d+(\.\d+)?) (\d+(\.\d+)?)$/, (ctx) => {
     const valeur1 = parseFloat(ctx.match[1]);
     const valeur2 = parseFloat(ctx.match[3]);
 
-    if (valeur2 > valeur
+    if (valeur2 > valeur1) {
+        return ctx.reply("⚠️ Erreur : Le coût ne peut pas être supérieur au prix de vente.");
+    }
+
+    const resultats = calculK2(valeur1, valeur2);
+
+    ctx.reply(`📌 **Résultats du calcul K2** :
+💰 **Prix de vente** : ${valeur1} €
+📉 **Coût total** : ${valeur2} €
+📊 **Marge réelle** : ${resultats.margeReelle} €
+📆 **Coût journalier (30j)** : ${resultats.coutJournalier} €
+📈 **Marge (%)** : ${resultats.margePourcentage} %`);
+});
+
+// 🚀 Lancer le bot
+bot.launch();
+
+// 🌍 Vérification que le bot fonctionne
+app.get("/", (req, res) => {
+    res.send("Bot Telegram actif !");
+});
+
+// 🔗 Gérer les requêtes Telegram (Webhook)
+app.post('/webhook', (req, res) => {
+    bot.handleUpdate(req.body);
+    res.sendStatus(200);
+});
+
+// Démarrer le serveur Express
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {
+    console.log(`Bot en ligne sur le port ${PORT} 🚀`);
+});
