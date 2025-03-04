@@ -39,10 +39,10 @@ bot.hears(/^(\d+(\.\d+)?) (\d+(\.\d+)?)$/, (ctx) => {
     const resultats = calculer(salaire, tjm);
 
     const message = `
-📌 <b>Coût jour :</b> <code>${resultats.coutJour} €</code>
-💰 <b>Marge K2 jour :</b> <code>${resultats.margeJour} €</code>
-📊 <b>Marge K2 mois :</b> <code>${resultats.margeMois} €</code>
-📈 <b>Marge (%) :</b> <code>${resultats.margePourcentage} %</code>
+📌 <b>Coût jour :</b> <u>${resultats.coutJour} €</u>
+💰 <b>Marge K2 jour :</b> <u>${resultats.margeJour} €</u>
+📊 <b>Marge K2 mois :</b> <u>${resultats.margeMois} €</u>
+📈 <b>Marge (%) :</b> <u>${resultats.margePourcentage} %</u>
 `;
 
     ctx.reply(message, { parse_mode: "HTML" });
