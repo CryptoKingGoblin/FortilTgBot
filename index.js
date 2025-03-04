@@ -7,41 +7,45 @@ const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 app.use(express.json());
 
-// ✅ Fonction qui effectue les calculs
+// ✅ Fonction de calcul avec mise en forme HTML
 function calculer(salaire, tjm) {
-    let margeReelle = salaire - tjm;                  // Marge réelle
-    let coutJournalier = tjm / 30;                    // Coût journalier sur 30 jours
-    let margePourcentage = (margeReelle / salaire) * 100; // Marge en %
+    let coutJour = salaire * 2 / 228 + 20.20;                  
+    let margeJour = tjm - coutJour;
+    let margeMois = margeJour * 19;
+    let margePourcentage = (margeJour / tjm) * 100;
 
     return {
-        margeReelle: margeReelle.toFixed(2),
-        coutJournalier: coutJournalier.toFixed(2),
+        coutJour: coutJour.toFixed(2),
+        margeJour: margeJour.toFixed(2),
+        margeMois : margeMois.toFixed(2),
         margePourcentage: margePourcentage.toFixed(2)
     };
 }
 
-// 🏁 Commande /start pour l'accueil
+// 🏁 Commande /start
 bot.start((ctx) => {
-    ctx.reply("Bienvenue ! Envoie simplement **deux nombres** (ex: `33500 450`), et je te donnerai les résultats 📊.");
+    ctx.reply("<b>Bienvenue sur ton assistant FORTIL !</b>\n\n💡 <i>Envoie simplement deux nombres (ex: 33500 450), et je te donnerai les résultats.</i>", { parse_mode: "HTML" });
 });
 
 // 📌 Détection automatique des messages contenant **deux nombres**
 bot.hears(/^(\d+(\.\d+)?) (\d+(\.\d+)?)$/, (ctx) => {
-    const salaire = parseFloat(ctx.match[1]); // Premier nombre = salaire
-    const tjm = parseFloat(ctx.match[3]);     // Deuxième nombre = TJM
+    const salaire = parseFloat(ctx.match[1]); 
+    const tjm = parseFloat(ctx.match[3]);     
 
     if (tjm > salaire) {
-        return ctx.reply("⚠️ Erreur : Le coût ne peut pas être supérieur au salaire.");
+        return ctx.reply("<b>⚠️ Erreur :</b> Le coût ne peut pas être supérieur au salaire.", { parse_mode: "HTML" });
     }
 
     const resultats = calculer(salaire, tjm);
 
-    ctx.reply(`📌 **Résultats du calcul** :
-💰 **Salaire** : ${salaire} €
-📉 **TJM** : ${tjm} €
-📊 **Marge réelle** : ${resultats.margeReelle} €
-📆 **Coût journalier (30j)** : ${resultats.coutJournalier} €
-📈 **Marge (%)** : ${resultats.margePourcentage} %`);
+    const message = `
+📆 <b>Coût jour :</b> <u>${resultats.coutJour} €</u>
+💰 <b>Marge K2 jour :</b> <code>${resultats.margeJour} €</code>
+📊 <b>Marge K2 mois :</b> <u>${resultats.margeMois} €</u>
+📈 <b>Marge (%) :</b> <b>${resultats.margePourcentage} %</b>
+`;
+
+    ctx.reply(message, { parse_mode: "HTML" });
 });
 
 // 🚀 Lancer le bot
