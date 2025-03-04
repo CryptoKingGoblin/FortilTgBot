@@ -7,11 +7,11 @@ const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 app.use(express.json());
 
-// ✅ Fonction de calcul pour la commande /K2
-function calculK2(valeur1, valeur2) {
-    let margeReelle = valeur1 - valeur2;                  // Marge réelle
-    let coutJournalier = valeur2 / 30;                    // Coût journalier (30 jours)
-    let margePourcentage = (margeReelle / valeur1) * 100; // Marge en %
+// ✅ Fonction qui effectue les calculs
+function calculer(salaire, tjm) {
+    let margeReelle = salaire - tjm;                  // Marge réelle
+    let coutJournalier = tjm / 30;                    // Coût journalier sur 30 jours
+    let margePourcentage = (margeReelle / salaire) * 100; // Marge en %
 
     return {
         margeReelle: margeReelle.toFixed(2),
@@ -20,25 +20,25 @@ function calculK2(valeur1, valeur2) {
     };
 }
 
-// 🏁 Commande /start
+// 🏁 Commande /start pour l'accueil
 bot.start((ctx) => {
-    ctx.reply("Bienvenue ! Utilise /K2 suivi de deux nombres (ex: `/K2 33500 450`) pour obtenir les résultats.");
+    ctx.reply("Bienvenue ! Envoie simplement **deux nombres** (ex: `33500 450`), et je te donnerai les résultats 📊.");
 });
 
-// 📌 Gestion de la commande /K2
-bot.hears(/^\/K2 (\d+(\.\d+)?) (\d+(\.\d+)?)$/, (ctx) => {
-    const valeur1 = parseFloat(ctx.match[1]);
-    const valeur2 = parseFloat(ctx.match[3]);
+// 📌 Détection automatique des messages contenant **deux nombres**
+bot.hears(/^(\d+(\.\d+)?) (\d+(\.\d+)?)$/, (ctx) => {
+    const salaire = parseFloat(ctx.match[1]); // Premier nombre = salaire
+    const tjm = parseFloat(ctx.match[3]);     // Deuxième nombre = TJM
 
-    if (valeur2 > valeur1) {
-        return ctx.reply("⚠️ Erreur : Le coût ne peut pas être supérieur au prix de vente.");
+    if (tjm > salaire) {
+        return ctx.reply("⚠️ Erreur : Le coût ne peut pas être supérieur au salaire.");
     }
 
-    const resultats = calculK2(valeur1, valeur2);
+    const resultats = calculer(salaire, tjm);
 
-    ctx.reply(`📌 **Résultats du calcul K2** :
-💰 **Prix de vente** : ${valeur1} €
-📉 **Coût total** : ${valeur2} €
+    ctx.reply(`📌 **Résultats du calcul** :
+💰 **Salaire** : ${salaire} €
+📉 **TJM** : ${tjm} €
 📊 **Marge réelle** : ${resultats.margeReelle} €
 📆 **Coût journalier (30j)** : ${resultats.coutJournalier} €
 📈 **Marge (%)** : ${resultats.margePourcentage} %`);
